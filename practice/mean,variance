@@ -1,0 +1,65 @@
+
+digital comm///////////////////////////
+
+
+//Function declaration
+float mean(char *str);
+float variance(char *str);
+//End function declaration
+
+//Defining the function for calculating the mean of random numbers
+float mean(char *str)
+{
+int i=0,c;
+FILE *fp;
+double x, temp=0.0;
+
+fp = fopen(str,"r");
+//get numbers from file
+while(fscanf(fp,"%lf",&x)!=EOF)
+{
+//Count numbers in file
+i=i+1;
+//Add all numbers in file
+temp = temp+x;
+}
+fclose(fp);
+temp = temp/(i-1);
+return temp;
+
+}
+//End function for calculating the variance of random numbers
+
+float variance(char *str)
+{
+  int i=0,c;
+FILE *fp;
+double x,y, temp=0.0;
+
+fp = fopen(str,"r");
+//get numbers from file
+while(fscanf(fp,"%lf",&x)!=EOF)
+{
+//Count numbers in file
+i=i+1;
+//Add all numbers in file
+temp = temp+x;
+}
+fclose(fp);
+temp = temp/(i-1);
+
+double tempo=0.0;
+fp = fopen(str,"r");
+while(fscanf(fp,"%lf",&y)!=EOF)
+{
+//Count numbers in file
+i=i+1;
+//Add all numbers in file
+tempo = tempo+(pow(y-temp,2));
+}
+fclose(fp);
+tempo = tempo/(i-1);
+return tempo;
+  
+}
+
