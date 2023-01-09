@@ -1,0 +1,297 @@
+\iffalse
+\documentclass[journal,10pt,twocolumn]{article}
+\usepackage{graphicx}
+\usepackage[margin=0.5in]{geometry}
+\usepackage[cmex10]{amsmath}
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{mathtools}
+\usepackage{dirtree}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage[justification=centering,font={rm,md,scriptsize}]{caption}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{mathtools}
+\usepackage{fancyvrb}
+\usepackage{hyperref}
+
+%Add chapter functionality in IEEEtran class
+\newcounter{Chapcounter}
+\newcommand\showmycounter{\addtocounter{Chapcounter}{1}\themycounter}
+\newcommand{\chapter}[1] 
+{ {\centering          
+  \addtocounter{Chapcounter}{1} \large \textbf{Chapter \theChapcounter ~#1}}  
+  \addcontentsline{toc}{section}{Chapter ~\theChapcounter~~ #1}    
+  \setcounter{section}{0}
+}
+%%%%
+
+\counterwithin{enumi}{section}
+\counterwithin{equation}{enumi}
+\counterwithin{figure}{enumi}
+
+\renewcommand\thesection{\theChapcounter.\arabic{section}}
+%\renewcommand\thesectiondis{\theChapcounter.\arabic{section}}
+\newcommand\figref{Fig.~\ref}
+
+\setenumerate{label=\thesection.\arabic*}
+
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+
+\providecommand{\mbf}{\mathbf}
+\providecommand{\pr}[1]{\ensuremath{\Pr\left(#1\right)}}
+\providecommand{\qfunc}[1]{\ensuremath{Q\left(#1\right)}}
+\providecommand{\sbrak}[1]{\ensuremath{{}\left[#1\right]}}
+\providecommand{\lsbrak}[1]{\ensuremath{{}\left[#1\right.}}
+\providecommand{\rsbrak}[1]{\ensuremath{{}\left.#1\right]}}
+\providecommand{\brak}[1]{\ensuremath{\left(#1\right)}}
+\providecommand{\lbrak}[1]{\ensuremath{\left(#1\right.}}
+\providecommand{\rbrak}[1]{\ensuremath{\left.#1\right)}}
+\providecommand{\cbrak}[1]{\ensuremath{\left\{#1\right\}}}
+\providecommand{\lcbrak}[1]{\ensuremath{\left\{#1\right.}}
+\providecommand{\rcbrak}[1]{\ensuremath{\left.#1\right\}}}
+\newcommand{\sgn}{\mathop{\mathrm{sgn}}}
+\providecommand{\abs}[1]{\left\vert#1\right\vert}
+\providecommand{\res}[1]{\Res\displaylimits_{#1}} 
+\providecommand{\norm}[1]{\left\lVert#1\right\rVert}
+\providecommand{\mtx}[1]{\mathbf{#1}}
+\providecommand{\mean}[1]{E\left[ #1 \right]}
+\providecommand{\fourier}{\overset{\mathcal{F}}{ \rightleftharpoons}}
+\providecommand{\ztrans}{\overset{\mathcal{Z}}{ \rightleftharpoons}}
+\providecommand{\system}{\overset{\mathcal{H}}{ \longleftrightarrow}}
+\newcommand{\solution}{\noindent \textbf{Solution: }}
+\newcommand{\cosec}{\,\text{cosec}\,}
+\providecommand{\dec}[2]{\ensuremath{\overset{#1}{\underset{#2}{\gtrless}}}}
+\newcommand{\myvec}[1]{\ensuremath{\begin{pmatrix}#1\end{pmatrix}}}
+\newcommand{\mydet}[1]{\ensuremath{\begin{vmatrix}#1\end{vmatrix}}}
+\providecommand{\gauss}[2]{\mathcal{N}\ensuremath{\left(#1,#2\right)}}
+\newcommand*{\permcomb}[4][0mu]{{{}^{#3}\mkern#1#2_{#4}}}
+\newcommand*{\perm}[1][-3mu]{\permcomb[#1]{P}}
+\newcommand*{\comb}[1][-1mu]{\permcomb[#1]{C}}
+
+\let\vec\mathbf
+
+\def\putbox#1#2#3{\makebox[0in][l]{\makebox[#1][l]{}\raisebox{\baselineskip}[0in][0in]{\raisebox{#2}[0in][0in]{#3}}}}
+     \def\rightbox#1{\makebox[0in][r]{#1}}
+     \def\centbox#1{\makebox[0in]{#1}}
+     \def\topbox#1{\raisebox{-\baselineskip}[0in][0in]{#1}}
+     \def\midbox#1{\raisebox{-0.5\baselineskip}[0in][0in]{#1}}
+
+\begin{document}
+
+\title{Maximum Likelihood Detection:BPSK}
+\author{Sampath Govardhan}
+
+\maketitle
+
+\tableofcontents
+
+\bigskip
+
+
+\fi
+
+\section{Maximum Likelihood}
+
+
+
+\begin{enumerate}
+
+
+
+\item Generate equiprobable $X \in \cbrak{1,-1}$.\\
+
+\item Generate 
+\begin{equation}
+Y = AX+N,
+\end{equation}
+		where $A = 5$ dB,  and $N \sim \gauss{0}{1}$.\\
+
+\item Plot $Y$ using a scatter plot.\\
+
+\solution   $X$, $Y$ and the scatter plot of $Y$ ($\figref{fig:bpsk_scatter}$) can be generated using the below code,
+\begin{lstlisting}
+codes/ch3_scatter.py
+\end{lstlisting}
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{./chapters/ch3/figs/ch3_scatter.png}
+\caption{Scatter plot of $Y$}
+\label{fig:bpsk_scatter}
+\end{figure}
+\item Guess how to estimate $X$ from $Y$.\\
+\solution
+\begin{equation}
+y \dec{1}{-1} 0
+\label{eq:bpsk_decision}
+\end{equation}
+\item
+\label{ml-ch4_sim}
+Find 
+\begin{equation}
+	P_{e|0} = \pr{\hat{X} = -1|X=1}
+\end{equation}
+and 
+\begin{equation}
+	P_{e|1} = \pr{\hat{X} = 1|X=-1}
+\end{equation}\\
+\solution Based on the decision rule in \eqref{eq:bpsk_decision},
+\begin{flalign*}
+	\pr{\hat{X} = -1|X=1} &= \pr{Y < 0|X=1}&\\
+	&= \pr{AX + N < 0|X=1}&\\ 
+	&= \pr{A + N < 0}&\\
+	&= \pr{N < -A}
+\end{flalign*}
+Similarly,
+\begin{flalign*}
+	\pr{\hat{X} = 1|X=-1} &= \pr{Y > 0|X=-1}&\\
+	&= \pr{N > A}
+\end{flalign*}
+Since $N \sim \gauss{0}{1}$,
+\begin{flalign}
+	\label{eq:std_norm_symmetric}
+	\pr{N < -A} &= \pr{N > A}&\\
+	\label{eq:bpks_prob_err_cond}
+	\implies P_{e|0} &= P_{e|1} = \pr{N > A}
+\end{flalign}
+%
+\item Find $P_e$ assuming that $X$ has equiprobable symbols.\\
+\solution
+\begin{flalign}
+	P_e &= \pr{X=1}P_{e|1} + \pr{X=-1}P_{e|0}&\\
+	\intertext{Since $X$ is equiprobable}\\
+	\label{eq:bpsk_prob_error_equi}
+	P_e &= \frac{1}{2}P_{e|1} + \frac{1}{2}P_{e|0}
+\end{flalign}
+Substituting from \eqref{eq:bpks_prob_err_cond}
+\begin{equation}
+	P_e = \pr{N > A}
+\end{equation}
+Given a random varible $X \sim \gauss{0}{1}$ the Q-function is defined as
+\begin{align}
+	Q(x) &= \pr{X > x}\\
+	\label{eq:q_func_integral}
+	Q(x) &= \frac{1}{\sqrt{2\pi}} \int_x^\infty \exp\left(-\frac{u^2}{2}\right) \, du.\\
+\end{align}
+Using the Q-function, $P_e$ is rewritten as
+\begin{equation}
+	P_e = Q(A)
+\end{equation} 
+%
+\item
+Verify by plotting  the theoretical $P_e$ with respect to $A$ from 0 to 10 dB.\\
+\solution The theoretical $P_e$ is plotted in $\figref{fig:bpsk_pe_snr}$, along with numerical estimations from generated samples of $Y$. The below code is used for the plot, 
+\begin{lstlisting}
+codes/chapter3/ch3_varyA.py
+\end{lstlisting}
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{./chapters/ch3/figs/ch3_varyA.png}
+\caption{$P_e$ versus $A$ plot}
+\label{fig:bpsk_pe_snr}
+\end{figure}
+%
+\item Now, consider a threshold $\delta$  while estimating $X$ from $Y$. Find the value of $\delta$ that maximizes the theoretical $P_e$.\\
+\label{prob:bpsk_delta_equi}
+\solution Given the decision rule, 
+\begin{equation}
+y \dec{1}{-1} \delta
+\label{eq:bpsk_decision_delta}
+\end{equation}
+\begin{flalign*}
+	P_{e|0} &= \pr{\hat{X} = -1|X=1}&\\
+	&= \pr{Y < \delta|X=1}&\\
+	&= \pr{AX + N < \delta|X=1}&\\ 
+	&= \pr{A + N < \delta}&\\
+	&= \pr{N < -A + \delta}&\\
+	&= \pr{N > A - \delta}&\\
+	&= Q(A-\delta)
+\end{flalign*}
+\begin{flalign*}
+	P_{e|1} &= \pr{\hat{X} = 1|X=-1}&\\
+	&= \pr{Y > \delta|X=-1}&\\
+	&= \pr{N > A + \delta}&\\
+	&= Q(A+\delta)
+ \end{flalign*}
+Using \eqref{eq:bpsk_prob_error_equi}, $P_e$ is given by
+\begin{flalign}
+	P_e &= \frac{1}{2}Q(A+\delta) + \frac{1}{2}Q(A-\delta)
+\end{flalign}
+Using the integral for Q-function from \eqref{eq:q_func_integral},
+\begin{align}
+	\label{eq:prob_error_delta_equi}
+	P_e &= k(\int_{A+\delta}^\infty \exp\left(-\frac{u^2}{2}\right) \, du + \int_{A-\delta}^\infty \exp\left(-\frac{u^2}{2}\right) \, du)\\
+	\intertext{where k is a constant}	\nonumber
+\end{align}
+Differentiating \eqref{eq:prob_error_delta_equi} wrt $\delta$ (using Leibniz's rule) and equating to $0$, we get
+\begin{flalign*}
+	\exp\left(-\frac{(A+\delta)^2}{2}\right)-\exp\left(-\frac{(A-\delta)^2}{2}\right) &= 0&\\
+	\frac{\exp\left(-\frac{(A+\delta)^2}{2}\right)}{\exp\left(-\frac{(A-\delta)^2}{2}\right)} &= 1&\\
+	\exp\left(-\frac{(A+\delta)^2-(A-\delta)^2}{2}\right) &= 1&\\
+	\exp\left(-2A\delta\right) &= 1&\\
+	\intertext{Taking $\ln$ on both sides}\\
+	-2A\delta &= 0&\\
+	\implies \delta &= 0
+\end{flalign*}
+$P_e$ is maximum for $\delta = 0$
+\item Repeat the above exercise when 
+\label{prob:bpsk_decision_uneqi}
+	\begin{align}
+		p_{X}(0) = p
+	\end{align}\\
+\solution Since $X$ is not equiprobable, $P_e$ is given by,
+\begin{flalign*}
+	P_e &= (1-p)P_{e|1} + pP_{e|0}&\\
+	&= (1-p)Q(A+\delta) + pQ(A-\delta)
+\end{flalign*}
+Using the integral for Q-function from \eqref{eq:q_func_integral},
+\begin{multline}
+	\label{eq:prob_error_delta_nonequi}
+	P_e = k((1-p)\int_{A+\delta}^\infty \exp\left(-\frac{u^2}{2}\right) \, du + \\
+	p\int_{A-\delta}^\infty \exp\left(-\frac{u^2}{2}\right) \, du)
+\end{multline}
+where $k$ is a constant.\\
+Following the same steps as in problem \ref{prob:bpsk_delta_equi}, $\delta$ for maximum $P_e$ evaluates to,
+\begin{equation}
+	\delta = \frac{1}{2A}\ln\left(\frac{1}{p}-1\right)
+\end{equation}
+\item Repeat the above exercise using the MAP criterion.\\
+\solution 
+The MAP rule can be stated as\\
+\begin{flalign}
+\label{eq:map_rule}
+\text{Set } \hat{x} &= x_i \text{ if}&\\ \nonumber
+p_X(x_k)p_Y(y|x_k) &\text{ is maximum for } k = i
+\end{flalign}
+For the case of BPSK, the point of equality between $p_X(x=1)p_Y(y|x=1)$ and $p_X(x=-1)p_Y(y|x=-1)$ is the optimum threshold. If this threshold is $\delta$, then
+\begin{flalign*}
+	pp_Y(y|x=1) > (1-p)p_Y(y|x=-1) &\text{ when } y > \delta&\\
+	pp_Y(y|x=1) < (1-p)p_Y(y|x=-1) &\text{ when } y < \delta 	
+\end{flalign*}
+The above inequalities can be visualized in below figure for p = 0.3 and A = 3.
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{./chapters/ch3/figs/ch3_map.png}
+\caption{$p_X(X=x_i)p_Y(y|x=x_i)$ versus $y$ plot for $X \in \{-1,1\}$}
+\label{fig:bpsk_map_density}
+\end{figure}
+Given $Y=AX+N$ where $N$ $\sim$ $\gauss{0}{1}$, the optimum threshold is found as solution to the below equation
+\begin{equation}
+	p\exp\left(-\frac{(y_{eq}-A)^2}{2}\right) = (1-p)\exp\left(-\frac{(y_{eq}+A)^2}{2}\right)
+\end{equation}
+Solving for $y_{eq}$, we get
+\begin{equation}
+	y_{eq} = \delta = \frac{1}{2A}\ln\left(\frac{1}{p}-1\right)
+\end{equation}
+which is same as $\delta$ obtained in problem \ref{prob:bpsk_decision_uneqi}
+
+\end{enumerate}
+%\end{document}
